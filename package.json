@@ -2,8 +2,11 @@
   "name": "shopflow-root",
   "version": "1.0.0",
   "description": "Root package for Render deployment",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
-    "build": "npm install --prefix backend && npm install --include=dev --prefix frontend && npm run build --prefix frontend",
-    "start": "npm start --prefix backend"
+    "build": "cd backend && npm install && cd ../frontend && npm install && npm run build",
+    "start": "cd backend && npm start"
   }
 }
