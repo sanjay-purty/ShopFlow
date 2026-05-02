@@ -1,16 +1,40 @@
 import Product from "../models/Product.js";
+import productsData from "../data/products.js";
+import mongoose from "mongoose";
 
 // @desc    Fetch all products
 // @route   GET /api/products
 // @access  Public
 const getProducts = async (req, res) => {
   try {
+    // If DB is not connected, return local data
+    if (mongoose.connection.readyState !== 1) {
+      console.log("Serving products from MOCK DATA");
+      return res.json(productsData);
+    }
+
     const keyword = req.query.keyword
       ? {
-          name: {
-            $regex: req.query.keyword,
-            $options: "i",
-          },
+          $or: [
+            {
+              name: {
+                $regex: req.query.keyword,
+                $options: "i",
+              },
+            },
+            {
+              description: {
+                $regex: req.query.keyword,
+                $options: "i",
+              },
+            },
+            {
+              category: {
+                $regex: req.query.keyword,
+                $options: "i",
+              },
+            },
+          ],
         }
       : {};
 

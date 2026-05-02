@@ -6,7 +6,9 @@ import generateToken from "../utils/generateToken.js";
 // @access  Public
 const authUser = async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
+  
+  // Normalize email to lowercase for consistent lookup
+  const user = await User.findOne({ email: email.toLowerCase() });
 
   if (user && (await user.matchPassword(password))) {
     res.json({

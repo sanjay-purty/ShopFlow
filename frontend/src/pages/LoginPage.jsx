@@ -24,8 +24,10 @@ const LoginPage = () => {
     try {
       await login(email, password);
       toast.success("Logged in successfully!");
+      // Use hard redirect to ensure state is settled and page changes
+      window.location.href = "/profile";
     } catch (err) {
-      toast.error("Invalid email or password");
+      toast.error(err.response?.data?.message || "Invalid email or password");
     }
   };
 

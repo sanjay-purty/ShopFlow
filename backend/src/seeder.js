@@ -16,12 +16,20 @@ const importData = async () => {
     await Product.deleteMany();
     await User.deleteMany();
 
-    const createdUsers = await User.insertMany([
-      { name: "Admin User", email: "admin@example.com", password: "password", isAdmin: true },
-      { name: "Test User", email: "user@example.com", password: "password", isAdmin: false }
-    ]);
-
-    const adminUser = createdUsers[0]._id;
+    // Create users individually to trigger the password hashing hook
+    const admin = await User.create({
+      name: "Admin User",
+      email: "admin@example.com",
+      password: "password",
+      isAdmin: true
+    });
+    
+    await User.create({
+      name: "Test User",
+      email: "user@example.com",
+      password: "password",
+      isAdmin: false
+    });
 
     await Product.insertMany(products);
 

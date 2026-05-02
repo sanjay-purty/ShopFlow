@@ -3,7 +3,8 @@ services:
     name: shopflow
     env: node
     plan: free
-    buildCommand: npm install && npm run build
+    rootDirectory: backend/
+    buildCommand: npm install or yarn install
     startCommand: npm start
     envVars:
       - key: NODE_ENV

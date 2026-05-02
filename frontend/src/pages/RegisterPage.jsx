@@ -9,6 +9,7 @@ const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { userInfo, register } = useAuth();
   
   const navigate = useNavigate();
@@ -27,10 +28,17 @@ const RegisterPage = () => {
       toast.error("Passwords do not match");
     } else {
       try {
+        setIsSubmitting(true);
+        console.log("Attempting registration for:", email);
         await register(name, email, password);
         toast.success("Registration successful!");
+        // Use window.location as a fail-safe to force the page to change
+        window.location.href = "/profile"; 
       } catch (err) {
-        toast.error(err.response?.data?.message || err.message);
+        console.error("Registration error:", err);
+        toast.error(err.response?.data?.message || err.message || "An unexpected error occurred");
+      } finally {
+        setIsSubmitting(false);
       }
     }
   };
@@ -101,9 +109,10 @@ const RegisterPage = () => {
 
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-4 px-6 rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-lg shadow-indigo-600/30 transform hover:-translate-y-0.5 mt-2"
+              disabled={isSubmitting}
+              className={`w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 shadow-lg shadow-indigo-600/30 transform mt-2 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:from-indigo-700 hover:to-purple-700 hover:-translate-y-0.5'}`}
             >
-              Sign Up
+              {isSubmitting ? "Creating Account..." : "Sign Up"}
             </button>
           </form>
 
